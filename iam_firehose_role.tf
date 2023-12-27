@@ -39,6 +39,15 @@ data "aws_iam_policy_document" "firehose_log_s3" {
       "s3:ListBucketMultipartUploads",
     ]
   }
+
+  statement {
+    effect = "Allow"
+
+    resources = ["*"]
+    actions = [
+      "logs:putLogEvents"
+    ]
+  }
 }
 
 resource "aws_iam_policy" "firehose_log_s3" {
