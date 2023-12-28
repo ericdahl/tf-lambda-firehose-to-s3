@@ -9,6 +9,13 @@ Demo app showing config to push Lambda logs to S3
 5. S3 bucket
 
 
+## TODO
+
+- fix perm issue with transform lambda
+```
+"errorCode":"Lambda.InvokeAccessDenied","errorMessage":"Access was denied. Ensure that the access policy allows access to the Lambda function."
+```
+
 ## Notes
 
 ### Raw logs without Transformation
