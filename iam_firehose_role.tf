@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "firehose_log_s3" {
     effect = "Allow"
 
     resources = [
-      "${aws_cloudwatch_log_group.default.arn}:log-stream:*"
+      "${aws_cloudwatch_log_group.lambda_hello.arn}:log-stream:*"
     ]
     actions = [
       "logs:putLogEvents"

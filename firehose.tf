@@ -9,7 +9,7 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
 
     cloudwatch_logging_options {
       enabled         = true
-      log_group_name  = aws_cloudwatch_log_group.default.name
+      log_group_name  = aws_cloudwatch_log_group.lambda_hello.name
       log_stream_name = "lambda"
 
     }
