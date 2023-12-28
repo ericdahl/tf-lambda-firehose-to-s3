@@ -11,7 +11,7 @@ resource "aws_lambda_function" "default" {
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 
   handler = "main.lambda_handler"
-  runtime = "python3.8"
+  runtime = "python3.11"
 }
 
 resource "aws_cloudwatch_log_group" "default" {
