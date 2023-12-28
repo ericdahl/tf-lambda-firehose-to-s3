@@ -1,14 +1,14 @@
-data "archive_file" "lambda_zip" {
+data "archive_file" "lambda_hello_zip" {
   type        = "zip"
   source_file = "lambda-hello/main.py"
   output_path = "lambda-hello/lambda.zip"
 }
 
 resource "aws_lambda_function" "hello" {
-  function_name    = local.name
+  function_name    = "${local.name}-hello"
   role             = aws_iam_role.lambda.arn
-  filename         = data.archive_file.lambda_zip.output_path
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  filename         = data.archive_file.lambda_hello_zip.output_path
+  source_code_hash = data.archive_file.lambda_hello_zip.output_base64sha256
 
   handler = "main.lambda_handler"
   runtime = "python3.11"
@@ -24,7 +24,7 @@ resource "aws_cloudwatch_event_rule" "cron_minute" {
   schedule_expression = "rate(1 minute)"
 }
 
-resource "aws_lambda_permission" "allow_cloudwatch" {
+resource "aws_lambda_permission" "hello_allow_cloudwatch" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.hello.arn
