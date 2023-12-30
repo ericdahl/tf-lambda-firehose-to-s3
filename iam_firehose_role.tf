@@ -50,6 +50,19 @@ data "aws_iam_policy_document" "firehose_log_s3" {
       "logs:putLogEvents"
     ]
   }
+
+  statement {
+    sid = "AllowFirehoseToInvokeTransformerLambda"
+    effect = "Allow"
+    actions = [
+      "lambda:InvokeFunction",
+      "lambda:GetFunctionConfiguration"
+    ]
+    resources = [
+      "${aws_lambda_function.transform.arn}:*"
+    ]
+  }
+
 }
 
 resource "aws_iam_policy" "firehose_log_s3" {
