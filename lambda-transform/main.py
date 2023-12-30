@@ -72,6 +72,7 @@ import base64
 import json
 import gzip
 import boto3
+import datetime
 
 
 def transformLogEvent(log_event):
@@ -85,7 +86,17 @@ def transformLogEvent(log_event):
     Returns:
     str: The transformed log event.
     """
-    return log_event['message'] + '\n'
+
+    msg = log_event['message']
+    if msg.startswith('START RequestId') or \
+            msg.startswith('END RequestId') or \
+            msg.startswith('REPORT RequestId'):
+        return ''
+    epoch_seconds = int(log_event['timestamp']) / 1000
+
+    formatted_time = datetime.datetime.utcfromtimestamp(epoch_seconds).strftime('%Y-%m-%d %H:%M:%S UTC')
+
+    return f"[{formatted_time}] {log_event['message']}"
 
 
 def processRecords(records):
@@ -114,6 +125,7 @@ def processRecords(records):
                 'recordId': recId
             }
 
+
 def splitCWLRecord(cwlRecord):
     """
     Splits one CWL record into two, each containing half the log events.
@@ -123,11 +135,12 @@ def splitCWLRecord(cwlRecord):
     """
     logEvents = cwlRecord['logEvents']
     mid = len(logEvents) // 2
-    rec1 = {k:v for k, v in cwlRecord.items()}
+    rec1 = {k: v for k, v in cwlRecord.items()}
     rec1['logEvents'] = logEvents[:mid]
-    rec2 = {k:v for k, v in cwlRecord.items()}
+    rec2 = {k: v for k, v in cwlRecord.items()}
     rec2['logEvents'] = logEvents[mid:]
     return [gzip.compress(json.dumps(r).encode('utf-8')) for r in [rec1, rec2]]
+
 
 def putRecordsToFirehoseStream(streamName, records, client, attemptsMade, maxAttempts):
     failedRecords = []
