@@ -75,7 +75,16 @@ import boto3
 import datetime
 
 
-def transformLogEvent(log_event):
+def get_tag_name(log_group_name):
+    client = boto3.client('logs')
+
+    tags_response = client.list_tags_log_group(logGroupName=log_group_name)
+    name_tag_value = tags_response.get('tags', {}).get('Name', None)
+    return name_tag_value
+
+
+
+def transformLogEvent(log_group_tag_name, log_event):
     """Transform each log event.
 
     The default implementation below just extracts the message and appends a newline to it.
@@ -97,18 +106,12 @@ def transformLogEvent(log_event):
     formatted_time = datetime.datetime.utcfromtimestamp(epoch_seconds).strftime('%Y-%m-%d %H:%M:%S UTC')
 
     r = {
+        "tag_name": log_group_tag_name,
         "time": formatted_time,
         "log": log_event['message']
     }
 
     return json.dumps(r) + "\n"
-    #
-    # r = {
-    #     time = formatted_time,
-    #
-    # }
-
-    # return f"[{formatted_time}] {log_event['message']}"
 
 
 def processRecords(records):
@@ -123,7 +126,8 @@ def processRecords(records):
                 'recordId': recId
             }
         elif data['messageType'] == 'DATA_MESSAGE':
-            joinedData = ''.join([transformLogEvent(e) for e in data['logEvents']])
+            tag_name = get_tag_name(data['logGroup'])
+            joinedData = ''.join([transformLogEvent(tag_name, e) for e in data['logEvents']])
             dataBytes = joinedData.encode("utf-8")
             encodedData = base64.b64encode(dataBytes).decode('utf-8')
             yield {
