@@ -18,6 +18,15 @@ Demo app showing config to push Lambda logs to S3
 
 ## Notes
 
+### Logs after Transformation
+
+```
+zcat tmp-s3/logs/lambda/tf-lambda-firehose-to-s3-hello/2023/12/31/18/tf-lambda-firehose-to-s3-3-2023-12-31-18-43-24-31f965fd-de35-4eaa-98fb-8035e8998e41.gz
+{"tag_name": "tf-lambda-firehose-to-s3", "time": "2023-12-31 18:43:14 UTC", "log": "[d3c7f1fa-1d4c-43da-8f4c-eed6633131f3] Hello world. Current Time is 2023-12-31 18:43:14\n"}
+{"tag_name": "tf-lambda-firehose-to-s3", "time": "2023-12-31 18:44:14 UTC", "log": "[6a3a1eda-0eb9-4511-a66b-286ccfbcff5a] Hello world. Current Time is 2023-12-31 18:44:14\n"}
+
+```
+
 ### Raw logs without Transformation
 
 ```
