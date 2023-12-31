@@ -33,6 +33,8 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
 
     compression_format = "GZIP"
 
+    buffering_interval = 60
+
     cloudwatch_logging_options {
       enabled         = true
       log_group_name  = aws_cloudwatch_log_group.lambda_hello.name

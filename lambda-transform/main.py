@@ -96,7 +96,19 @@ def transformLogEvent(log_event):
 
     formatted_time = datetime.datetime.utcfromtimestamp(epoch_seconds).strftime('%Y-%m-%d %H:%M:%S UTC')
 
-    return f"[{formatted_time}] {log_event['message']}"
+    r = {
+        "time": formatted_time,
+        "log": log_event['message']
+    }
+
+    return json.dumps(r) + "\n"
+    #
+    # r = {
+    #     time = formatted_time,
+    #
+    # }
+
+    # return f"[{formatted_time}] {log_event['message']}"
 
 
 def processRecords(records):
