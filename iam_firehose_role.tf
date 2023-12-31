@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "firehose_log_s3" {
   }
 
   statement {
-    sid = "AllowFirehoseToInvokeTransformerLambda"
+    sid    = "AllowFirehoseToInvokeTransformerLambda"
     effect = "Allow"
     actions = [
       "lambda:InvokeFunction",
